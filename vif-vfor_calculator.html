@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <title>Document</title>
+</head>
+
+<body class="bg-gray-500">
+    <div id="app">
+
+        <div class="flex justify-center mt-10">
+            <div class="w-80 h-150 bg-slate-950 shadow-2xl rounded-xl p-5">
+                <h1 class="text-2xl text-red-700 font-bold text-center my-5">"KAL KYUuu"</h1>
+                <input v-model="display" class="border-2 border-gray-600 py-4 px-1 text-red-600 text-2xl text-end"
+                    type="text" placeholder="0">
+                <div class="grid grid-cols-4 gap-2">
+
+                    <!-- button c,del,%,/ -->
+
+                    <button @click="clearDisplay('C')"
+                        class="bg-blue-500 rounded-full p-4 text-black text-1xl font-semibold mt-5 hover:bg-blue-800 hover:scale-105 duration-200">C</button>
+                    <button @click="press(Del)"
+                        class="bg-blue-500 rounded-full p-4 text-black text-1xl font-semibold mt-5 hover:bg-blue-800 hover:scale-105 duration-200">DeL</button>
+                    <button @click="numbersOperator('%')"
+                        class="bg-blue-500 rounded-full p-4 text-black text-1xl font-semibold mt-5 hover:bg-blue-800 hover:scale-105 duration-200">%</button>
+                    <button @click="numbersOperator('/')"
+                        class="bg-yellow-500 rounded-full p-4 text-black text-1xl font-semibold mt-5 hover:bg-yellow-300 hover:scale-105 duration-200">/</button>
+
+                    <!-- button 7,8,9 -->
+
+                    <button @click="numbers('7')"
+                        class="bg-gray-500 rounded-full p-4 text-black text-2xl font-semibold mt-5 hover:bg-gray-400 hover:scale-105 duration-200">7</button>
+                    <button @click="numbers('8')"
+                        class="bg-gray-500 rounded-full p-4 text-black text-2xl font-semibold mt-5 hover:bg-gray-400 hover:scale-105 duration-200">8</button>
+                    <button @click="numbers('9')"
+                        class="bg-gray-500 rounded-full p-4 text-black text-2xl font-semibold mt-5 hover:bg-gray-400 hover:scale-105 duration-200">9</button>
+                    <button @click="numbersOperator('*')"
+                        class="bg-yellow-500 rounded-full p-4 text-black text-2xl font-semibold mt-5 hover:bg-yellow-300 hover:scale-105 duration-200">*</button>
+
+                    <!-- button 4,5,6 -->
+
+                    <button @click="numbers('4')"
+                        class="bg-gray-500 rounded-full px-4 py-2 text-black text-2xl font-semibold mt-5 hover:bg-gray-400 hover:scale-105 duration-200">4</button>
+                    <button @click="numbers('5')"
+                        class="bg-gray-500 rounded-full px-4 py-2 text-black text-2xl font-semibold mt-5 hover:bg-gray-400 hover:scale-105 duration-200">5</button>
+                    <button @click="numbers('6')"
+                        class="bg-gray-500 rounded-full px-4 py-2 text-black text-2xl font-semibold mt-5 hover:bg-gray-400 hover:scale-105 duration-200">6</button>
+                    <button @click="numbersOperator('-')"
+                        class="bg-yellow-500 rounded-full px-4 py-2 text-black text-2xl font-semibold mt-5 hover:bg-yellow-300 hover:scale-105 duration-200">-</button>
+
+                    <!-- button 1,2,3 -->
+
+                    <button @click="numbers('1')"
+                        class="bg-gray-500 rounded-full px-4 py-2 text-black text-2xl font-semibold mt-5 hover:bg-gray-400 hover:scale-105 duration-200">1</button>
+                    <button @click="numbers('2')"
+                        class="bg-gray-500 rounded-full px-4 py-2 text-black text-2xl font-semibold mt-5 hover:bg-gray-400 hover:scale-105 duration-200">2</button>
+                    <button @click="numbers('3')"
+                        class="bg-gray-500 rounded-full px-4 py-2 text-black text-2xl font-semibold mt-5 hover:bg-gray-400 hover:scale-105 duration-200">3</button>
+                    <button @click="numbersOperator('+')"
+                        class="bg-yellow-500 rounded-full px-4 py-2 text-black text-2xl font-semibold mt-5 hover:bg-yellow-300 hover:scale-105 duration-200">+</button>
+
+                    <!-- button 0,= -->
+
+                    <button @click="numbers('0')"
+                        class="bg-gray-500 rounded-full px-4 py-2 text-black text-2xl font-semibold mt-5 hover:bg-gray-400 hover:scale-105 duration-200">0</button>
+                    <button @click="numbersOperator('.')"
+                        class="bg-gray-500 rounded-full px-4 py-2 text-black text-2xl font-semibold mt-5 hover:bg-gray-400 hover:scale-105 duration-200">.</button>
+                    <button @click="calculateOperator('=')"
+                        class="bg-yellow-500 rounded-full px-4 py-2 text-black text-2xl font-semibold mt-5 hover:bg-yellow-300 hover:scale-105 duration-200">=</button>
+                    <button @click="clearDisplay('clear')"
+                        class="bg-yellow-500 rounded-full px-4 py-2 text-black text-1xl font-semibold mt-5 hover:bg-yellow-300 hover:scale-105 duration-200">clear</button>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    <script>
+
+        Vue.createApp({
+            data() {
+                return {
+                    display: "",
+                    currentInput: "",
+                    operator: "",
+                    first: 0,
+                    secondNum: 0,
+                    success: "",
+
+
+
+                }
+            },
+
+            methods: {
+
+                numbers(value) {
+
+                    this.currentInput += value;
+
+                    this.display = this.currentInput;
+                },
+
+
+
+
+                numbersOperator(op) {
+
+                    if (this.operator === "" && this.currentInput !== "") {
+
+                        this.first = parseFloat(this.currentInput);
+
+                    } else {
+                        this.stepsToCalculate();
+
+                    }
+
+
+
+                    this.operator = op;
+
+                    this.currentInput = '';
+
+                    this.display = this.firstNum;
+                },
+
+
+                stepsToCalculate() {
+
+                    this.secondNum = parseFloat(this.currentInput);
+
+                    if (this.operator === "/" && this.secondNum === 0) {
+                        this.display = "error";
+
+                        return false;
+                    }
+
+                    if (this.secondNum) {
+
+                        switch (this.operator) {
+                            case "+":
+                                this.first += this.secondNum;
+                                break;
+
+                            case "-":
+                                this.first -= this.secondNum;
+                                break;
+
+                            case "*":
+                                this.first *= this.secondNum;
+                                break;
+
+                            case "/":
+                                this.first /= this.secondNum;
+                                break;
+
+                            default:
+                                this.first = this.secondNum;
+                        }
+
+                    }
+
+                    this.currentInput = "";
+                    this.display = this.first;
+                    return true;
+                },
+
+                calculateOperator() {
+                    this.success = this.stepsToCalculate();
+
+                    if (!this.success) {
+                        return;
+                    }
+
+                    this.operator = "";
+                },
+
+                clearDisplay() {
+
+                    this.currentInput = "";
+                    this.display = "";
+
+                    this.firstNum = "";
+                    this.secondNum = "";
+                    this.operator = "";
+                }
+            }
+        }).mount('#app')
+
+    </script>
+</body>
+
+</html>
